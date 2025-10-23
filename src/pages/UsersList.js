@@ -2,16 +2,41 @@ import React, { useEffect, useState, useContext } from "react";
 import { api } from "../api";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { 
+  Container, 
+  Typography, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Paper, 
+  Button, 
+  IconButton, 
+  CircularProgress, 
+  Card, 
+  CardContent, 
+  Grid 
+} from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    // Teacher fetches all users, student fetches all too but will only see their own
     api.get("/Users")
-      .then(res => setUsers(res.data)) // backend returns array directly
-      .catch(err => console.error(err));
+      .then(res => {
+        setUsers(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   const handleDelete = async (id) => {
@@ -26,72 +51,86 @@ const UsersList = () => {
     }
   };
 
+  if (loading) {
+    return <CircularProgress />;
+  }
+
   // STUDENT VIEW
   if (user?.role === "Student") {
     const student = users.find(u => u.email === user.email);
-    if (!student) return <div>You have no user record.</div>;
+    if (!student) return <Container><Typography>You have no user record.</Typography></Container>;
 
     return (
-      <div style={{ maxWidth: 400, margin: "40px auto" }}>
-        <h2>My Details</h2>
-        <p><strong>Name:</strong> {student.name}</p>
-        <p><strong>Email:</strong> {student.email}</p>
-        <p><strong>Role:</strong> {student.role}</p>
-        <p><strong>Mobile:</strong> {student.mobileNumber}</p>
-        <p><strong>Address:</strong> {student.address}</p>
-        <p><strong>Gender:</strong> {student.gender}</p>
-        <p><strong>Age:</strong> {student.age}</p>
-        <p><strong>Date of Birth:</strong> {student.dateOfBirth?.split("T")[0]}</p>
-        <p><strong>Designation:</strong> {student.designation}</p>
-        <p><strong>Department:</strong> {student.department}</p>
-      </div>
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div" gutterBottom>
+              My Details
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}><strong>Name:</strong></Grid><Grid item xs={6}>{student.name}</Grid>
+              <Grid item xs={6}><strong>Email:</strong></Grid><Grid item xs={6}>{student.email}</Grid>
+              <Grid item xs={6}><strong>Role:</strong></Grid><Grid item xs={6}>{student.role}</Grid>
+              <Grid item xs={6}><strong>Mobile:</strong></Grid><Grid item xs={6}>{student.mobileNumber}</Grid>
+              <Grid item xs={6}><strong>Address:</strong></Grid><Grid item xs={6}>{student.address}</Grid>
+              <Grid item xs={6}><strong>Gender:</strong></Grid><Grid item xs={6}>{student.gender}</Grid>
+              <Grid item xs={6}><strong>Age:</strong></Grid><Grid item xs={6}>{student.age}</Grid>
+              <Grid item xs={6}><strong>Date of Birth:</strong></Grid><Grid item xs={6}>{student.dateOfBirth?.split("T")[0]}</Grid>
+              <Grid item xs={6}><strong>Designation:</strong></Grid><Grid item xs={6}>{student.designation}</Grid>
+              <Grid item xs={6}><strong>Department:</strong></Grid><Grid item xs={6}>{student.department}</Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Container>
     );
   }
 
   // TEACHER VIEW
   return (
-    <div style={{ maxWidth: 900, margin: "40px auto" }}>
-      <h2>All Users</h2>
-      <table border="1" cellPadding="8" style={{ width: "100%", marginTop: 10 }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Mobile</th>
-            <th>Address</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>DOB</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u.userId}>
-              <td>{u.userId}</td>
-              <td>{u.name}</td>
-              <td>{u.email}</td>
-              <td>{u.role}</td>
-              <td>{u.mobileNumber}</td>
-              <td>{u.address}</td>
-              <td>{u.gender}</td>
-              <td>{u.age}</td>
-              <td>{u.dateOfBirth?.split("T")[0]}</td>
-              <td>{u.designation}</td>
-              <td>{u.department}</td>
-              <td>
-                <Link to={`/users/${u.userId}/edit`}><button>Edit</button></Link>
-                <button onClick={() => handleDelete(u.userId)} style={{ marginLeft: 8 }}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>All Users</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Mobile</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Gender</TableCell>
+              <TableCell>Age</TableCell>
+              <TableCell>DOB</TableCell>
+              <TableCell>Designation</TableCell>
+              <TableCell>Department</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map(u => (
+              <TableRow key={u.userId}>
+                <TableCell>{u.userId}</TableCell>
+                <TableCell>{u.name}</TableCell>
+                <TableCell>{u.email}</TableCell>
+                <TableCell>{u.role}</TableCell>
+                <TableCell>{u.mobileNumber}</TableCell>
+                <TableCell>{u.address}</TableCell>
+                <TableCell>{u.gender}</TableCell>
+                <TableCell>{u.age}</TableCell>
+                <TableCell>{u.dateOfBirth?.split("T")[0]}</TableCell>
+                <TableCell>{u.designation}</TableCell>
+                <TableCell>{u.department}</TableCell>
+                <TableCell>
+                  <IconButton component={Link} to={`/users/${u.userId}/edit`}><EditIcon /></IconButton>
+                  <IconButton onClick={() => handleDelete(u.userId)}><DeleteIcon /></IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 

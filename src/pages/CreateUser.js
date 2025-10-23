@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../api";
 import { useNavigate } from "react-router-dom";
+import { Container, TextField, Button, Typography, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -51,31 +52,50 @@ const CreateUser = () => {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "40px auto" }}>
-      <h2>Create User</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} />
-        <select name="role" value={form.role} onChange={handleChange}>
-          <option value="Student">Student</option>
-          <option value="Teacher">Teacher</option>
-        </select>
-        <input name="mobileNumber" placeholder="Mobile Number" value={form.mobileNumber} onChange={handleChange} />
-        <input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
-        <select name="gender" value={form.gender} onChange={handleChange}>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-        <input name="profileImageUrl" placeholder="Profile Image URL" value={form.profileImageUrl} onChange={handleChange} />
-        <input name="age" type="number" placeholder="Age" value={form.age} onChange={handleChange} />
-        <input name="dateOfBirth" type="date" value={form.dateOfBirth} onChange={handleChange} />
-        <input name="designation" placeholder="Designation" value={form.designation} onChange={handleChange} required />
-        <input name="department" placeholder="Department" value={form.department} onChange={handleChange} />
-        <button type="submit" style={{ width: "100%", marginTop: 10 }}>Create User</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Create User
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <TextField margin="normal" required fullWidth id="name" label="Name" name="name" value={form.name} onChange={handleChange} />
+          <TextField margin="normal" required fullWidth id="email" label="Email Address" name="email" type="email" value={form.email} onChange={handleChange} />
+          <TextField margin="normal" fullWidth id="password" label="Password" name="password" type="password" value={form.password} onChange={handleChange} />
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select labelId="role-label" id="role" name="role" value={form.role} onChange={handleChange}>
+              <MenuItem value="Student">Student</MenuItem>
+              <MenuItem value="Teacher">Teacher</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField margin="normal" fullWidth id="mobileNumber" label="Mobile Number" name="mobileNumber" value={form.mobileNumber} onChange={handleChange} />
+          <TextField margin="normal" fullWidth id="address" label="Address" name="address" value={form.address} onChange={handleChange} />
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="gender-label">Gender</InputLabel>
+            <Select labelId="gender-label" id="gender" name="gender" value={form.gender} onChange={handleChange}>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField margin="normal" fullWidth id="profileImageUrl" label="Profile Image URL" name="profileImageUrl" value={form.profileImageUrl} onChange={handleChange} />
+          <TextField margin="normal" fullWidth id="age" label="Age" name="age" type="number" value={form.age} onChange={handleChange} />
+          <TextField margin="normal" fullWidth id="dateOfBirth" label="Date Of Birth" name="dateOfBirth" type="date" value={form.dateOfBirth} InputLabelProps={{ shrink: true }} onChange={handleChange} />
+          <TextField margin="normal" required fullWidth id="designation" label="Designation" name="designation" value={form.designation} onChange={handleChange} />
+          <TextField margin="normal" fullWidth id="department" label="Department" name="department" value={form.department} onChange={handleChange} />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            Create User
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

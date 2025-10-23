@@ -6,8 +6,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UsersList from "./pages/UsersList";
 import CreateUser from "./pages/CreateUser";
-import EditUser from "./pages/EditUser"; // You can implement as needed
+import EditUser from "./pages/EditUser"; 
 import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./pages/Home";
 
 function App() {
   return (
